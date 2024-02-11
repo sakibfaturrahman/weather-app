@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuaca App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Cari Kota" spellcheck="false">
+            <button><img src="img/search.png" alt="search"srcset=""></button>
+        </div>
+
+        <div class="weather">
+            <div class="time"><span id="tanggal"></span></div>
+           
+            <img src="img/clouds.png" class="weather-icon">
+       <h1 class="temp">22°C</h1>
+       <h2 class="kota">Tasikmalaya</h2>
+       <div class="sapa"> <div class="sapa"><span id="hai"></span> chief</div></div>
+       <div class="detail">
+        <div class="col">
+            <img src="img/humidity.png" alt="">
+            <div>
+                <p class="kelembaban">50%</p>
+                <p>Kelembaban</p>
+            </div>
+        </div>
+        <div class="col">
+            <img src="img/wind.png">
+            <div>
+                <p class="wind">15 Km/h</p>
+                <p>Kecepatan angin</p>
+               
+            </div>
+        </div>
+       </div>
+        </div>
+    </div>
+
+
+    <script>
+        const apiKey = "bd968665d4372ff6e2c32e09f380b6b9";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon"); 
+
+        async function checkWeather(kota){
+            const response = await fetch(apiUrl + kota + `&appid=${apiKey}`);
+            var data = await response.json();
+
+            console.log(data);
+
+            document.querySelector(".kota").innerHTML = data.name;
+            document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+            document.querySelector(".kelembaban").innerHTML = data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML = data.wind.speed + "Km/h";
+
+            if(data.weather[0].main == "Clouds"){
+                weatherIcon.scr = "img/clouds.png";
+            }
+            else if(data.weather[0].main == "Clear"){
+                weatherIcon.scr = "img/clear.png";
+            }
+            else if(data.weather[0].main == "Rain"){
+                weatherIcon.scr = "img/rain.png";
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weatherIcon.scr = "img/drizzle.png";
+            }
+            else if(data.weather[0].main == "Mist"){
+                weatherIcon.scr = "img/mist.png";
+            }
+        }
+
+        searchBtn.addEventListener("click",()=>{
+            checkWeather(searchBox.value);
+        })
+
+        
+       
+    </script>
+    <script>
+        function Sapa() {
+            let currentDateTime = new Date();
+            let currentHour = currentDateTime.getHours();
+            let greetingElement = document.getElementById("hai");
+            let greeting;
+
+            if (currentHour >= 0 && currentHour < 6) {
+                greeting = "Selamat malam";
+            } else if (currentHour >= 6 && currentHour < 12) {
+                greeting = "Selamat pagi";
+            } else if (currentHour >= 12 && currentHour < 15) {
+                greeting = "Selamat siang";
+            } else if (currentHour >= 15 && currentHour < 18) {
+                greeting = "Selamat sore";
+            } else {
+                greeting = "Selamat malam";
+            }
+
+            greetingElement.textContent = greeting;
+        }
+        Sapa();
+    </script>
+
+<script>
+    function updateDateAndTime() {
+        let currentDateTime = new Date();
+        let tanggalSpan = document.getElementById("tanggal");
+        let jamSpan = document.getElementById("jam");
+
+        let options = {
+            timeZone: "Asia/Jakarta",
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        };
+        let formatter = new Intl.DateTimeFormat("id-ID", options);
+
+        let formattedDate = formatter.format(currentDateTime);
+
+        tanggalSpan.textContent = "" + formattedDate;
+        jamSpan.textContent = "" + formattedDate;
+    }
+
+    setInterval(updateDateAndTime, 1000);
+    updateDateAndTime();
+</script>
+</body>
+</html>
